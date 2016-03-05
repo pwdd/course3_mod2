@@ -70,7 +70,17 @@ class Place
       { :$match => { :'address_components.types' => 'country' } },
       { :$group => { _id: '$address_components.long_name' } }
     ]
+    
     collection.find.aggregate(q).map { |doc| doc[:_id] }
+  end
+
+  def self.find_ids_by_country_code(country_code)
+    q = [
+      { :$match => { :'address_components.short_name' => country_code } },
+      { :$project => { _id: 1 } }
+    ]
+
+    collection.find.aggregate(q).map { |doc| doc[:_id].to_s }
   end
 
   def destroy
