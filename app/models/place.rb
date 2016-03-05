@@ -1,5 +1,4 @@
 class Place
-  Mongo::Logger.logger.level = ::Logger::INFO
   attr_accessor :id, :formatted_address, :location, :address_components
 
   def initialize(params={})
@@ -106,31 +105,11 @@ class Place
     docs = self.class.near(@location, max_meters)
     self.class.to_places(docs)
   end
+
+  def photos(offset=0, limit=nil)
+    collection = Photo.find_photos_for_place(@id)
+    collection = collection.skip(offset) unless offset.zero?
+    collection = collection.limit(limit) unless limit.nil?
+    collection.map { |doc| Photo.find(doc[:_id].to_s) }
+  end
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
