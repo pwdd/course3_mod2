@@ -42,6 +42,12 @@ class Place
     doc = collection.find(_id: BSON::ObjectId.from_string(id)).first
     doc.nil? ? nil : Place.new(doc)
   end
+
+  def self.all(offset=0, limit=nil)
+    set = collection.find.skip(offset)
+    set = limit.nil? ? set : set.limit(limit)
+    set.map { |doc| Place.new(doc) }
+  end
 end
 
 
