@@ -49,6 +49,19 @@ class Place
     set.map { |doc| Place.new(doc) }
   end
 
+  def self.get_address_components(sort={}, offset=0, limit=nil)
+    q = [{ :$unwind => '$address_components' },
+         { :$project => { address_components: 1, 
+                          formatted_address: 1, 
+                          :'geometry.geolocation' => 1 } }
+    ]
+    q << { :$sort => sort } unless sort.size.zero?
+    q << { :$skip => offset } unless offset.zero?
+    q << { :$limit => limit } unless limit.nil?
+
+    collection.find.aggregate(q)
+  end
+
   def destroy
     self.class.collection.find(_id: BSON::ObjectId.from_string(@id)).delete_one
   end
