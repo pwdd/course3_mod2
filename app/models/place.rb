@@ -62,6 +62,17 @@ class Place
     collection.find.aggregate(q)
   end
 
+  def self.get_country_names
+    q = [
+      { :$project => { :'address_components.long_name' => 1, 
+                       :'address_components.types' => 1 } },
+      { :$unwind => '$address_components' },
+      { :$match => { :'address_components.types' => 'country' } },
+      { :$group => { _id: '$address_components.long_name' } }
+    ]
+    collection.find.aggregate(q).map { |doc| doc[:_id] }
+  end
+
   def destroy
     self.class.collection.find(_id: BSON::ObjectId.from_string(@id)).delete_one
   end
