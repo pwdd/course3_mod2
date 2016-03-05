@@ -1,5 +1,6 @@
 class Photo
-  attr_accessor :id, :location, :contents
+  attr_accessor :id, :location
+  attr_writer :contents
 
   def initialize(params={})
     @id = params[:_id].nil? ? params[:id] : params[:_id].to_s
@@ -55,5 +56,14 @@ class Photo
       id = self.class.mongo_client.database.fs.insert_one(gridfs)
       @id = id.to_s
     end
+  end
+
+  def contents
+    gridfs = self.class.mongo_client.database.fs.find_one(_id: BSON::ObjectId.from_string(@id))
+    if gridfs
+      buffer = ''
+      gridfs.chunks.each { |chunk| buffer.concat(chunk.data.data) }
+    end
+    buffer
   end
 end
