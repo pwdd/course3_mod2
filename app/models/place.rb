@@ -10,7 +10,9 @@ class Place
       @address_components = params[:address_components].map do |component|
         AddressComponent.new(component)
       end
-    end    
+    else
+      nil
+    end
   end
 
   def self.mongo_client
@@ -26,4 +28,35 @@ class Place
     hash = JSON.parse(read)
     collection.insert_many(hash)
   end
+
+  def self.find_by_short_name(short_name)
+    collection.find(:'address_components.short_name' => short_name)
+  end
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
