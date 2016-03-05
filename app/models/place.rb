@@ -32,6 +32,11 @@ class Place
   def self.find_by_short_name(short_name)
     collection.find(:'address_components.short_name' => short_name)
   end
+
+  def self.to_places(view)
+    return nil if view.nil?
+    view.inject([]) { |memo, doc| memo << Place.new(doc) }
+  end
 end
 
 
