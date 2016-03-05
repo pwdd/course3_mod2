@@ -32,6 +32,10 @@ class Photo
     doc.nil? ? nil : Photo.new(doc)
   end
 
+  def self.find_photos_for_place(doc_id)
+    mongo_client.database.fs.find('metadata.place' => BSON::ObjectId.from_string(doc_id))
+  end
+
   def persisted?
     !@id.nil?
   end
