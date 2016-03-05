@@ -66,4 +66,8 @@ class Photo
     end
     buffer
   end
+
+  def destroy
+    self.class.mongo_client.database.fs.find(_id: BSON::ObjectId.from_string(@id)).delete_one
+  end
 end
