@@ -20,6 +20,12 @@ class Photo
     Mongoid::Clients.default
   end
 
+  def self.all(offset=0, limit=nil)
+    docs = mongo_client.database.fs.find.skip(offset)
+    docs = docs.limit(limit) unless limit.nil?
+    docs.map { |doc| Photo.new(doc) }
+  end
+
   def persisted?
     !@id.nil?
   end
