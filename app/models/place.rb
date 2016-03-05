@@ -48,6 +48,10 @@ class Place
     set = limit.nil? ? set : set.limit(limit)
     set.map { |doc| Place.new(doc) }
   end
+
+  def destroy
+    self.class.collection.find(_id: BSON::ObjectId.from_string(@id)).delete_one
+  end
 end
 
 
