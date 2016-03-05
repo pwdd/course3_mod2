@@ -1,7 +1,7 @@
 class Point
   attr_accessor :longitude, :latitude
 
-  def initialize(params={})
+  def initialize(params)
     if params[:lng] && params[:lat]
       @longitude = params[:lng]
       @latitude = params[:lat]

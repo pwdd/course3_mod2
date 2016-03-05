@@ -1,5 +1,17 @@
 class Place
   Mongo::Logger.logger.level = ::Logger::INFO
+  attr_accessor :id, :formatted_address, :location, :address_components
+
+  def initialize(params={})
+    @id = params[:_id].nil? ? params[:id] : params[:_id].to_s
+    @formatted_address = params[:formatted_address] || nil
+    @location = Point.new(params[:geometry][:geolocation]) || nil
+    unless params[:address_components].nil?
+      @address_components = params[:address_components].map do |component|
+        AddressComponent.new(component)
+      end
+    end    
+  end
 
   def self.mongo_client
     Mongoid::Clients.default
