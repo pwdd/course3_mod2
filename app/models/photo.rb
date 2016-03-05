@@ -78,4 +78,19 @@ class Photo
                   .first
     search[:_id] || 0
   end
+
+  def place
+    return nil if @place.nil?
+    @place.is_a?(Place) ? Place.find(@place.id) : Place.find(@place.to_s)
+  end
+
+  def place=(place)
+    if place.is_a?(Place)
+      @place = BSON::ObjectId.from_string(place.id)
+    elsif place.is_a?(String)
+      @place = BSON::ObjectId.from_string(place)
+    else
+      @place = place
+    end
+  end
 end
