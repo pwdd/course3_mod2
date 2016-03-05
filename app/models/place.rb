@@ -101,6 +101,11 @@ class Place
   def destroy
     self.class.collection.find(_id: BSON::ObjectId.from_string(@id)).delete_one
   end
+
+  def near(max_meters=0)
+    docs = self.class.near(@location, max_meters)
+    self.class.to_places(docs)
+  end
 end
 
 
