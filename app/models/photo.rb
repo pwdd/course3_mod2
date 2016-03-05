@@ -26,6 +26,11 @@ class Photo
     docs.map { |doc| Photo.new(doc) }
   end
 
+  def self.find(id)
+    doc = mongo_client.database.fs.find(_id: BSON::ObjectId.from_string(id)).first
+    doc.nil? ? nil : Photo.new(doc)
+  end
+
   def persisted?
     !@id.nil?
   end
