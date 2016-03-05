@@ -37,6 +37,11 @@ class Place
     return nil if view.nil?
     view.inject([]) { |memo, doc| memo << Place.new(doc) }
   end
+
+  def self.find(id)
+    doc = collection.find(_id: BSON::ObjectId.from_string(id)).first
+    doc.nil? ? nil : Place.new(doc)
+  end
 end
 
 
